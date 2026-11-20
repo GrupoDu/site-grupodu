@@ -29,7 +29,7 @@ export default function Home() {
         <h3>Loja em breve!</h3>
         <LuArrowDown className={styles.arrowDown} />
       </div>
-      <div className={styles.sobreSection}>
+      <section className={styles.sobreSection} id={"sobreSection"}>
         <div className={styles.sobreText}>
           <h2>Nossa História e Propósito</h2>
           <p>
@@ -51,11 +51,11 @@ export default function Home() {
           </p>
         </div>
         <FundamentalValuesContainer />
-      </div>
+      </section>
       <div className={styles.estadosSection}>
         <StatesContainer />
       </div>
-      <div className={styles.segmentsSection}>
+      <section className={styles.segmentsSection}>
         <SectionTitle>Nossas Empresas</SectionTitle>
         <div className={styles.titleSegments}>
           <h1>
@@ -69,7 +69,7 @@ export default function Home() {
           com resultados excepcionais.
         </p>
         <SegmentsContainer />
-      </div>
+      </section>
       <div className={styles.motivoEscolha}>
         <h1>Por quê Escolher o Grupo Du?</h1>
         <h2>
@@ -92,7 +92,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <div className={styles.diferenciacoesSection}>
+      <section className={styles.diferenciacoesSection}>
         <div className={styles.texts}>
           <h1>
             O que nos torna{" "}
@@ -122,15 +122,15 @@ export default function Home() {
             Solicitar Orçamento
           </Button>
         </div>
-      </div>
-      <div className={styles.contatoSection} id="formulario">
+      </section>
+      <section className={styles.contatoSection} id="contatoSection">
         <h1>Entre em Contato</h1>
         <p>Estamos aqui para ajudar você. Entre em contato conosco!</p>
         <div className={styles.formInfos}>
           <ContactsSectionMainPages />
           <FormContact />
         </div>
-      </div>
+      </section>
     </div>
   );
 }
