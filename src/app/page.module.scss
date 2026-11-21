@@ -1,6 +1,4 @@
 :root {
-  // --image-v1: url("../../public/bg-main-page.jpg");
-  // --image-v2: url("../../public/bg-main-page-v2.jpg");
   --image-v3: url("../../public/bg-main-page-v3.jpg");
 }
 
@@ -18,11 +16,20 @@
     position: relative;
     gap: 0.8em;
     box-sizing: border-box;
-    background-image: var(--image-v3);
-    // background-position: 100% 100% 100% 80%;
-    background-size: cover;
     position: relative;
     transition: all 0.3s ease-in-out;
+    
+    &::before {
+      content: "";
+      top: 0;
+      left: 0;
+      width: 100%;
+      position: absolute;
+      height: 100dvh;
+      background-image: var(--image-v3);
+      background-size: cover;
+      opacity: .8;
+    }
 
     &::after {
       content: "";
@@ -34,7 +41,6 @@
       mix-blend-mode: multiply;
       background: linear-gradient(
         126deg,
-        rgba(3, 9, 22, 1) 0%,
         rgba(89, 114, 167, 1) 64%,
         rgba(17, 51, 124, 1) 100%
       );
@@ -195,7 +201,7 @@
     display: flex;
     padding: 8em 4em;
     width: 100%;
-    background-color: #030916;
+    background-color: #1c283b;
     box-sizing: border-box;
     align-items: center;
     gap: 1em;
