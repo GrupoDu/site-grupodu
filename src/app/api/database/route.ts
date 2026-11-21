@@ -1,7 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_API_KEY;
 
 export const GET = async (request: NextRequest) => {
@@ -15,40 +15,21 @@ export const GET = async (request: NextRequest) => {
 
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  const normalizandoTexto = (text: string) => {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/-/g, " ");
-  };
-
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const produtoEndpoint = searchParams.get("produto");
+    const produtoEndpoint = getProductEndpoint(request);
 
-    if (!produtoEndpoint) {
-      const { data, error } = await supabase.from("products").select("*");
-      if (error)
-        return NextResponse.json({ error: error.message }, { status: 500 });
-      return NextResponse.json(data, {
-        headers: {
-          "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
-        },
-      });
-    }
+    if (!produtoEndpoint) return await productEndpointNotFound(supabase);
 
     const { data, error } = await supabase
       .from("products")
       .select("*")
       .order("product_uuid");
 
-    if (error)
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) return errorResponse(error);
 
-    const produtoNormalizado = normalizandoTexto(produtoEndpoint);
+    const produtoNormalizado = textNormalization(produtoEndpoint);
     const dataFiltrada = data.filter((item) =>
-      normalizandoTexto(item.tipo_produto).includes(produtoNormalizado)
+      textNormalization(item.tipo_produto).includes(produtoNormalizado)
     );
 
     return NextResponse.json(dataFiltrada, {
@@ -59,6 +40,35 @@ export const GET = async (request: NextRequest) => {
   } catch (err) {
     const error = err as Error;
     console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return errorResponse(error);
   }
 };
+
+function getProductEndpoint(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  return searchParams.get("produto") ?? "";
+}
+
+async function productEndpointNotFound(supabase: SupabaseClient) {
+  const { data, error } = await supabase.from("products").select("*");
+
+  if (error) return errorResponse(error);
+
+  return NextResponse.json(data, {
+    headers: {
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
+    },
+  });
+}
+
+function errorResponse(error: Error) {
+  return NextResponse.json({ error: error.message }, { status: 500 });
+}
+
+function textNormalization(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/-/g, " ");
+}

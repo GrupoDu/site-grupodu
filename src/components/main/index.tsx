@@ -10,6 +10,8 @@ export const Main = ({ id }: { id: string }) => {
   const productType = useCheckPathnameProduct();
   const productsData = useFetchProductsData(productType);
   const hasProducts = productsData.length > 0;
+  const productImage = (image: string) =>
+    image == '""' ? "https://placehold.net/600x600.png" : image;
 
   return (
     <>
@@ -19,7 +21,7 @@ export const Main = ({ id }: { id: string }) => {
             <CardProduto
               key={product.product_uuid}
               nomeProduto={product.name}
-              imagemProduto={product.image}
+              imagemProduto={productImage(product.image)}
               descricaoProduto={product.description}
               altImagem={product.product_type}
               caracteristicas={product.features}

@@ -80,20 +80,20 @@ const Navbar = () => {
           >
             Produtos
           </Link>
-          <span
-            style={notAvailableStyle}
+          <Link
+            href={"/#sobreSection"}
             className={`${isAboutPage && styles.actualPage} ${styles.pageLink}`}
           >
             Sobre
-          </span>
-          <span
-            style={notAvailableStyle}
+          </Link>
+          <Link
+            href={"/#contatoSection"}
             className={`${isContactsPage && styles.actualPage} ${
               styles.pageLink
             }`}
           >
             Entre em Contato
-          </span>
+          </Link>
           <div className={styles.catalogo} onClick={downloadFullCatalog}>
             <span>Nosso Catalogo</span>
             <LuDownload color="black" className={styles.downloadIcon} />

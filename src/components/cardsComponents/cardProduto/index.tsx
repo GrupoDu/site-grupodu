@@ -7,7 +7,7 @@ import { BulletProduct } from "../../bulletsComponents/bulletProduct";
 
 type CardProdutoProps = {
   nomeProduto: string;
-  imagemProduto: StaticImageData;
+  imagemProduto: string;
   descricaoProduto: string;
   altImagem: string;
   caracteristicas: string[];

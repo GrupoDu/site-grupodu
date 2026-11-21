@@ -1,18 +1,33 @@
 import { NextResponse } from "next/server";
-import { brevoClient } from "@/services/brevo";
+import * as z from "zod";
+import { BrevoClient } from "@getbrevo/brevo";
 
 export async function POST(req: Request) {
-  try {
-    const { listId, email } = await req.json();
+  const { listId, email } = await req.json();
+  const API_KEY = process.env["BREVO_API_KEY"];
 
-    await brevoClient.contacts.createContact({
-      listIds: listId,
-      email,
-    });
+  const validateEmail = z.email().safeParse(email);
 
-    return NextResponse.json({ message: "Email enviado!" }, { status: 200 });
-  } catch (err) {
-    const error = err as Error;
-    console.error(error.message);
-  }
+  if (!validateEmail.success)
+    return NextResponse.json(
+      { message: "Formato de email inválido." },
+      { status: 400 }
+    );
+
+  if (!API_KEY)
+    return NextResponse.json(
+      { message: "KEY do brevo não encontrada." },
+      { status: 500 }
+    );
+
+  const brevoClient = new BrevoClient({
+    apiKey: API_KEY ?? "",
+  });
+
+  await brevoClient.contacts.createContact({
+    listIds: listId,
+    email,
+  });
+
+  return NextResponse.json({ message: "Email enviado!" }, { status: 200 });
 }

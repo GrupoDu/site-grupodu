@@ -26,7 +26,7 @@ declare global {
     name: string;
     description: string;
     product_type: string;
-    image: StaticImageData;
+    image: string;
     features: string[];
   }
 }
