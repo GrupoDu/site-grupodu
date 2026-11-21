@@ -81,13 +81,13 @@ const Navbar = () => {
             Produtos
           </Link>
           <Link
-            href={"#sobreSection"}
+            href={"/#sobreSection"}
             className={`${isAboutPage && styles.actualPage} ${styles.pageLink}`}
           >
             Sobre
           </Link>
           <Link
-            href={"#contatoSection"}
+            href={"/#contatoSection"}
             className={`${isContactsPage && styles.actualPage} ${
               styles.pageLink
             }`}
