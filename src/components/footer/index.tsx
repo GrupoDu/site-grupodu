@@ -19,13 +19,20 @@ export const Footer = () => {
 
   const handleSignEmail = async () => {
     try {
-      await fetch("/api/sign-email", {
+      const res = await fetch("/api/sign-email", {
         method: "POST",
         body: JSON.stringify({
           listId: [13],
           email: contactEmail,
         }),
       });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message ?? "Houve um erro ao registrar email.");
+        return;
+      }
 
       toast.success("Obrigado pelo interesse!");
     } catch (err) {
@@ -157,7 +164,9 @@ export const Footer = () => {
               value={contactEmail}
               placeholder="Seu e-mail"
             />
-            <button onClick={() => handleSignEmail()}>Inscrever</button>
+            <button onClick={async () => await handleSignEmail()}>
+              Inscrever
+            </button>
           </div>
         </div>
       </div>
