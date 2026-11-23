@@ -9,9 +9,13 @@ import { usePathname } from "next/navigation";
 import { useScrollOpacity } from "@/hooks/useScrollOpacity";
 import Link from "next/link";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { checkURLContext } from "@/utils/checkURLContext";
 import { MenuMobile } from "../menu";
 import { downloadFullCatalog } from "@/utils/downloadFullCatalog";
+import { navOptions } from "@/constants/navOptions.constant";
+
+function isActualPage(actualPage: string, option: string) {
+  return actualPage === option;
+}
 
 const Navbar = () => {
   const [actualPage, setActualPage] = useState("inicio");
@@ -21,14 +25,6 @@ const Navbar = () => {
   const pathname = usePathname();
   const [logo, setLogo] = useState<StaticImport>(LogoGrupo);
   const [segmento, setSegmento] = useState<string>("");
-  const isProductPage = actualPage === "produtos";
-  const isAboutPage = actualPage === "sobre";
-  const isHomePage = actualPage === "inicio";
-  const isContactsPage = actualPage === "contatos";
-  const notAvailableStyle: CSSProperties = {
-    opacity: 0.2,
-    cursor: "not-allowed",
-  };
 
   const openMenu = () => {
     setMenu(true);
@@ -39,7 +35,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    setActualPage(checkURLContext(pathname));
+    setActualPage(pathname);
 
     if (pathname.includes("dom-metal")) {
       setLogo(LogoDomMetal);
@@ -66,34 +62,15 @@ const Navbar = () => {
           <span>{segmento ? segmento : "Grupo Du"}</span>
         </div>
         <div className={styles.pagesLinks}>
-          <Link
-            href={"/"}
-            className={`${isHomePage && styles.actualPage} ${styles.pageLink}`}
-          >
-            Início
-          </Link>
-          <Link
-            href={"/produtos"}
-            className={`${isProductPage && styles.actualPage} ${
-              styles.pageLink
-            }`}
-          >
-            Produtos
-          </Link>
-          <Link
-            href={"/#sobreSection"}
-            className={`${isAboutPage && styles.actualPage} ${styles.pageLink}`}
-          >
-            Sobre
-          </Link>
-          <Link
-            href={"/#contatoSection"}
-            className={`${isContactsPage && styles.actualPage} ${
-              styles.pageLink
-            }`}
-          >
-            Entre em Contato
-          </Link>
+          {navOptions.map((option) => (
+            <Link
+              href={option.href}
+              className={`${isActualPage(actualPage, option.href) && styles.actualPage}
+                 ${option.href === "" && styles.pageLink}`}
+            >
+              {option.label}
+            </Link>
+          ))}
           <div className={styles.catalogo} onClick={downloadFullCatalog}>
             <span>Nosso Catalogo</span>
             <LuDownload color="black" className={styles.downloadIcon} />
