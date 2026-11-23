@@ -55,6 +55,10 @@
     justify-content: end;
     user-select: none;
     gap: 2em;
+    
+    a {
+      text-wrap: nowrap;
+    }
 
     .carrinhoIcon {
       position: relative;
