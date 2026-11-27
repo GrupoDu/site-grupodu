@@ -1,18 +1,22 @@
+:root {
+  --button-green: #35c23a;
+  --button-green-border: #3fab45;
+}
+
 .produtoContainer {
   height: fit-content;
   display: flex;
   flex-direction: column;
-  height: fit-content;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0px 0px 10px 0px rgba($color: #000000, $alpha: 0.2);
+  gap: .6rem;
+  box-shadow: 0 0 10px 0 rgba($color: #000000, $alpha: 0.2);
   padding: 20px;
   border-radius: 20px;
   transition: all 0.3s ease-in-out;
 
   &:hover {
     transform: translateY(-7px);
-    box-shadow: 0px 0px 10px 0px rgba($color: #000000, $alpha: 0.4);
+    box-shadow: 0 0 10px 0 rgba($color: #000000, $alpha: 0.4);
   }
 
   .imageContainer {
@@ -21,6 +25,8 @@
     height: fit-content;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    border-radius: .8rem;
 
     .imagemProduto {
       object-fit: contain;
@@ -51,7 +57,6 @@
     gap: 1em;
     display: flex;
     flex-direction: column;
-    // justify-content: space-around;
 
     .bullet {
       box-sizing: border-box;
@@ -73,12 +78,11 @@
     justify-content: center;
     gap: 8px;
     box-sizing: border-box;
-    border-radius: 40px;
+    border-radius: .8rem;
     cursor: pointer;
     outline: none;
-    border: none;
     background-color: #35c23a;
-    box-shadow: 0px 0px 10px 0px rgba($color: #000000, $alpha: 0.4);
+    border: 1px solid var(--button-green-border);
     color: white;
     font-size: 16px;
     transition: all 0.3s ease-in-out;
@@ -90,7 +94,7 @@
     }
 
     &:hover {
-      background-color: #2c9131;
+      background-color: var(--button-green-border);
     }
   }
 }
@@ -98,13 +102,16 @@
 @media screen and (min-width: 320px) and (max-width: 480px) {
   .produtoContainer {
     padding: 15px;
-    gap: 15px;
-    // border-radius: 10px;
+    gap: .8rem;
 
     .imageContainer {
       .imagemProduto {
         height: 14em;
       }
+    }
+    
+    .button {
+      font-size: 1rem; 
     }
   }
 }
