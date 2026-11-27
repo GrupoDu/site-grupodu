@@ -2,35 +2,71 @@
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import styles from "./styles.module.scss";
-import { IRepresentativeCandidateForm } from "../types";
 import { submitRepresentativeCandidate } from "@/services/submitRepresentativeCandidate";
+import { IRegisterRepresentative } from "@/@types/representative.interface";
+import toast from "react-hot-toast";
+import { northeastStates } from "@/constants/northeastStates";
+import { numberRgx } from "@/utils/numberRgx";
+import { IResponsePayload } from "@/@types/responsePayload.interface";
+import { checkContacts } from "@/utils/checkContacts";
 
-const initialFormValues: IRepresentativeCandidateForm = {
-  company: "",
-  trading_name: "",
-  cnpj: "",
-  state: "",
-  city: "",
+const initialFormValues: IRegisterRepresentative = {
+  empresa: "",
+  nome_fantasia: "",
+  cnpj_cpf: "",
+  estado: "",
+  uf: "",
+  cidade: "",
   cep: "",
-  number: "",
+  numero: 0,
   email: "",
-  phone: "",
+  contato: "",
 };
 
 export const CandidateForm = () => {
   const [formData, setFormData] =
-    useState<IRepresentativeCandidateForm>(initialFormValues);
+    useState<IRegisterRepresentative>(initialFormValues);
 
   const handleInputChange = (
-    field: keyof IRepresentativeCandidateForm,
+    field: keyof IRegisterRepresentative,
     value: string
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const defineUf = () => {
+    const stateUf = northeastStates.find((s) => s.name === formData.estado);
+    if (!stateUf) throw new Error("UF do estado não encontrado");
+    formData.uf = stateUf.uf;
+  };
+
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await submitRepresentativeCandidate(formData);
+
+    try {
+      checkContacts(formData);
+      defineUf();
+
+      formData.numero = Number(formData.numero);
+
+      const res = await fetch("/api/register-representative", {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(`Houve um erro. Tente novamente mais tarde`);
+        return;
+      }
+
+      return toast.success(data.message);
+    } catch (e) {
+      toast.error(
+        (e as IResponsePayload<{ message: string; status: number }>).message
+      );
+    }
   };
 
   return (
@@ -47,29 +83,30 @@ export const CandidateForm = () => {
         {/* Linha 1: Empresa e Nome fantasia */}
         <div className={styles.formRow}>
           <div className={styles.inputField}>
-            <label htmlFor="company">Empresa</label>
+            <label className={styles.isRequired} htmlFor="empresa">
+              Empresa
+            </label>
             <input
               id="company"
               type="text"
               placeholder="Razão social da empresa"
-              value={formData.company}
+              value={formData.empresa}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("company", e.target.value)
+                handleInputChange("empresa", e.target.value)
               }
               required
             />
           </div>
           <div className={styles.inputField}>
-            <label htmlFor="trading_name">Nome fantasia</label>
+            <label htmlFor="nome_fantasia">Nome fantasia</label>
             <input
               id="trading_name"
               type="text"
               placeholder="Nome comercial da empresa"
-              value={formData.trading_name}
+              value={formData.nome_fantasia ?? ""}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("trading_name", e.target.value)
+                handleInputChange("nome_fantasia", e.target.value)
               }
-              required
             />
           </div>
         </div>
@@ -79,14 +116,16 @@ export const CandidateForm = () => {
         {/* Linha 2: CNPJ */}
         <div className={styles.formRow}>
           <div className={styles.inputField}>
-            <label htmlFor="cnpj">CNPJ</label>
+            <label className={styles.isRequired} htmlFor="cnpj_cpf">
+              CNPJ
+            </label>
             <input
               id="cnpj"
               type="text"
               placeholder="00.000.000/0000-00"
-              value={formData.cnpj}
+              value={formData.cnpj_cpf}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("cnpj", e.target.value)
+                handleInputChange("cnpj_cpf", numberRgx(e.target.value))
               }
               required
             />
@@ -98,55 +137,60 @@ export const CandidateForm = () => {
         {/* Linha 3: Estado, Cidade, CEP e Número */}
         <div className={styles.formRow}>
           <div className={styles.inputField}>
-            <label htmlFor="state">Estado</label>
+            <label className={styles.isRequired} htmlFor="estado">
+              Estado
+            </label>
             <input
               id="state"
               type="text"
               placeholder="Ex: Pernambuco"
-              value={formData.state}
+              value={formData.estado}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("state", e.target.value)
+                handleInputChange("estado", e.target.value)
               }
               required
             />
           </div>
           <div className={styles.inputField}>
-            <label htmlFor="city">Cidade</label>
+            <label className={styles.isRequired} htmlFor="cidade">
+              Cidade
+            </label>
             <input
               id="city"
               type="text"
               placeholder="Ex: Recife"
-              value={formData.city}
+              value={formData.cidade}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("city", e.target.value)
+                handleInputChange("cidade", e.target.value)
               }
               required
             />
           </div>
           <div className={styles.inputField}>
-            <label htmlFor="cep">CEP</label>
+            <label className={styles.isRequired} htmlFor="cep">
+              CEP
+            </label>
             <input
               id="cep"
               type="text"
               placeholder="00000-000"
               value={formData.cep}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("cep", e.target.value)
+                handleInputChange("cep", numberRgx(e.target.value))
               }
               required
             />
           </div>
           <div className={styles.inputField}>
-            <label htmlFor="number">Número</label>
+            <label htmlFor="numero">Número</label>
             <input
               id="number"
               type="text"
               placeholder="Ex: 123"
-              value={formData.number}
+              value={formData.numero}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("number", e.target.value)
+                handleInputChange("numero", e.target.value)
               }
-              required
             />
           </div>
         </div>
@@ -161,24 +205,22 @@ export const CandidateForm = () => {
               id="email"
               type="email"
               placeholder="seu@email.com"
-              value={formData.email}
+              value={formData.email ?? ""}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleInputChange("email", e.target.value)
               }
-              required
             />
           </div>
           <div className={styles.inputField}>
-            <label htmlFor="phone">Contato (celular/fixo)</label>
+            <label htmlFor="contato">Contato (celular/fixo)</label>
             <input
               id="phone"
               type="tel"
               placeholder="(00) 00000-0000"
-              value={formData.phone}
+              value={formData.contato ?? ""}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleInputChange("phone", e.target.value)
+                handleInputChange("contato", numberRgx(e.target.value))
               }
-              required
             />
           </div>
         </div>
@@ -186,6 +228,9 @@ export const CandidateForm = () => {
         <button type="submit" className={styles.submitButton}>
           Me candidatar
         </button>
+        <span className={styles.contactWarning}>
+          Aviso: Pelo menos uma forma de contato deve ser informada*
+        </span>
       </form>
     </section>
   );
