@@ -140,20 +140,6 @@ const DomMetalPage = () => {
                 </Button>
               </div>
             </div>
-            <div
-              className={`${styles.rightContent} ${styles.rightContentPlaceholder}`}
-            >
-              {imagensPlaceholder.map((image, index) => (
-                <Image
-                  src={image}
-                  key={index}
-                  alt="ilustracoes"
-                  width={500}
-                  height={100}
-                  className={styles.ilustracoes}
-                />
-              ))}
-            </div>
           </div>
         </div>
         <div className={styles.catalogo} id="catalogo">

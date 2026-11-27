@@ -111,9 +111,9 @@
       top: 0;
       left: 0;
       background: linear-gradient(
-        180deg,
-        rgba(46, 9, 64, 0.7) 0%,
-        rgba(14, 15, 74, 0.4) 100%
+              180deg,
+              rgba(46, 9, 64, 0.7) 0%,
+              rgba(14, 15, 74, 0.4) 100%
       );
       z-index: 1;
     }
@@ -152,14 +152,15 @@
           width: 100%;
 
           .bulletComponent {
-            background-color: rgba(#e4e9ff, 0.2);
-            color: white;
+            background-color: rgba(#e4e9ff, 0.8);
+            color: var(--blue-dark);
             box-shadow: 0 0 4px 0 rgba(#000000, 0.2);
 
             .iconCheck {
-              color: white;
+              color: var(--blue-dark);
             }
           }
+
         }
 
         .construtorasList {
@@ -179,6 +180,8 @@
           gap: 1em;
           height: 3em;
         }
+
+
       }
 
       .rightContent {
@@ -290,9 +293,9 @@
 
     h2 {
       background-image: linear-gradient(
-        to right,
-        #ffffff,
-        rgba(255, 255, 255, 0.3)
+              to right,
+              #ffffff,
+              rgba(255, 255, 255, 0.3)
       );
       background-clip: text;
       text-align: center;
@@ -421,10 +424,10 @@
 
       .grupodu {
         background: linear-gradient(
-          120deg,
-          #152a60 0%,
-          #3374c9 58%,
-          #2b57c6 100%
+                120deg,
+                #152a60 0%,
+                #3374c9 58%,
+                #2b57c6 100%
         );
         padding: 2em;
         border-radius: 16px;
@@ -474,10 +477,10 @@
 
             .button {
               background: linear-gradient(
-                90deg,
-                #c21e1e 0%,
-                #fa6464 56%,
-                #c21e1e 100%
+                      90deg,
+                      #c21e1e 0%,
+                      #fa6464 56%,
+                      #c21e1e 100%
               );
               padding: 10px;
               width: 100%;
@@ -519,10 +522,10 @@
 
             .button {
               background: linear-gradient(
-                90deg,
-                #1e78c2 0%,
-                #65afeb 56%,
-                #1e78c2 100%
+                      90deg,
+                      #1e78c2 0%,
+                      #65afeb 56%,
+                      #1e78c2 100%
               );
               padding: 10px;
               width: 100%;
@@ -543,7 +546,7 @@
   }
 }
 
-@media screen and (min-width: 380px) and (max-width: 420px) {
+@media screen and (min-width: 320px) and (max-width: 768px) {
   .pageContainer {
     .heroSection {
       padding: 40px 20px 20px 20px;
@@ -576,6 +579,7 @@
         }
       }
     }
+
     .diferencial {
       flex-direction: column;
       padding: 6em 3em;
@@ -621,6 +625,7 @@
 
     .contatoSection {
       margin: 5em 0;
+
       .formInfos {
         flex-direction: column;
         gap: 3em;
