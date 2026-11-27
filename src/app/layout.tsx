@@ -9,6 +9,7 @@ import ArrowUp from "@/components/ui/arrowUp";
 import Script from "next/script";
 import Image from "next/image";
 import { ReactNode } from "react";
+import { LoadingProvider } from "@/providers/loading.provider";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -61,12 +62,14 @@ export default function RootLayout({
         <title>Grupo Du</title>
       </head>
       <body className={`${poppins.variable}`}>
-        <Toast />
-        <Navbar />
-        <ArrowUp />
-        <WsIcon />
-        {children}
-        <Footer />
+        <LoadingProvider>
+          <Toast />
+          <Navbar />
+          <ArrowUp />
+          <WsIcon />
+          {children}
+          <Footer />
+        </LoadingProvider>
       </body>
     </html>
   );
