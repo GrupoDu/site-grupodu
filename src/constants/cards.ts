@@ -13,6 +13,7 @@ export const textosCardProdutos = {
         imagens: [],
         href: "carro-de-mao-para-obras",
         buttonTxt: "Catalogo Completo de Carros de Mão",
+        type: "carro de mão",
       },
       {
         titulo: "Masseiras para Obra e Argamassa",
@@ -24,6 +25,7 @@ export const textosCardProdutos = {
         imagens: [],
         href: "masseira-para-obras",
         buttonTxt: "Catalogo Completo de Masseiras",
+        type: "masseira",
       },
       {
         titulo: "Plataforma de Trabalho para Construção",
@@ -35,6 +37,7 @@ export const textosCardProdutos = {
         imagens: [],
         href: "plataforma-de-trabalho",
         buttonTxt: "Catalogo Completo de Plataformas de Trabalho",
+        type: "plataforma",
       },
     ],
     duferro: [{ titulos: ["", "", ""], bullets: ["", "", ""], imagens: [] }],
