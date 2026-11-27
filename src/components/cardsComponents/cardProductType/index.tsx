@@ -12,6 +12,7 @@ import "swiper/css/pagination";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useFetchProductsData } from "@/hooks/useFetchProductsData";
+import { useLoading } from "@/hooks/useLoading";
 
 type CardProductTypeProps = {
   titulo: string;
@@ -19,6 +20,7 @@ type CardProductTypeProps = {
   buttonScheme: string;
   href: string;
   buttonTxt: string;
+  productType: string;
 };
 
 const ImageTemplate = () => {
@@ -37,65 +39,14 @@ const ImageTemplate = () => {
  * @see {CardProductTypeProps}
  */
 export const CardProductType = (props: CardProductTypeProps) => {
-  const { titulo, href, buttonTxt, buttonScheme, bullets } = props;
+  const { titulo, href, buttonTxt, buttonScheme, bullets, productType } = props;
+  const { isLoading } = useLoading();
   const [produtos, setProdutos] = useState<IProduct[]>([]);
-  const productsData = useFetchProductsData();
-  const isPlatformTitle = titulo === "Plataforma de Trabalho para Construção";
-  const isCarTitle = titulo === "Carro de Mão para Construção Civil";
-  const isMasseiraTitle = titulo === "Masseiras para Obra e Argamassa";
-  const hasNoProducts = produtos.length === 0;
-
-  useEffect(() => {
-    if (productsData) setProdutos(productsData);
-
-    if (isCarTitle) {
-      setProdutos(
-        productsData.filter(
-          (product: IProduct) => product.product_type === "carro de mão"
-        )
-      );
-    } else if (isMasseiraTitle) {
-      setProdutos(
-        productsData.filter(
-          (product: IProduct) => product.product_type === "masseira"
-        )
-      );
-    } else if (isPlatformTitle) {
-      setProdutos(
-        productsData.filter(
-          (product: IProduct) => product.product_type === "plataforma"
-        )
-      );
-    }
-  }, [props.titulo, productsData]);
+  const productsData = useFetchProductsData(productType);
 
   return (
-    <div className={styles.container}>
-      {hasNoProducts ? (
-        <ImageTemplate />
-      ) : (
-        <Swiper
-          className={styles.swiper}
-          spaceBetween={50}
-          slidesPerView={1}
-          modules={[Autoplay]}
-          loop={true}
-          autoplay={{ delay: 4000 }}
-        >
-          {produtos.map((produto, index) => (
-            <SwiperSlide key={index} className={styles.swiperSlide}>
-              <Image
-                src={produto.image}
-                alt={titulo}
-                className={styles.imagem}
-                width={400}
-                height={400}
-                loading="lazy"
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      )}
+    <div className={styles.cardProductContainer}>
+      <DisplayProductImage productsData={productsData} titulo={titulo} />
       <div className={styles.content}>
         <h4>{titulo}</h4>
         <ul>
@@ -120,3 +71,46 @@ export const CardProductType = (props: CardProductTypeProps) => {
     </div>
   );
 };
+
+function DisplayProductImage({
+  productsData,
+  titulo,
+}: {
+  productsData: IProduct[];
+  titulo: string;
+}) {
+  const { isLoading } = useLoading();
+  const hasNoProducts = productsData.length < 1;
+
+  if (!isLoading && hasNoProducts) {
+    return <ImageTemplate />;
+  }
+
+  return (
+    <Swiper
+      className={styles.swiper}
+      spaceBetween={50}
+      slidesPerView={1}
+      modules={[Autoplay]}
+      loop={true}
+      autoplay={{ delay: 4000 }}
+    >
+      {productsData.map((produto, index) => (
+        <SwiperSlide key={index} className={styles.swiperSlide}>
+          <Image
+            src={
+              produto.image.length > 10
+                ? produto.image
+                : "https://placehold.co/600x400"
+            }
+            alt={titulo}
+            className={styles.imagem}
+            width={400}
+            height={400}
+            loading="lazy"
+          />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+}
