@@ -1,4 +1,4 @@
-export interface IStateItem {
+export interface IStateItem extends Record<string, string> {
   name: string;
   uf: string;
 }
