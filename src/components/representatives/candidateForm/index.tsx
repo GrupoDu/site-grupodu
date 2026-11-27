@@ -2,7 +2,6 @@
 
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import styles from "./styles.module.scss";
-import { submitRepresentativeCandidate } from "@/services/submitRepresentativeCandidate";
 import { IRegisterRepresentative } from "@/@types/representative.interface";
 import toast from "react-hot-toast";
 import { northeastStates } from "@/constants/northeastStates";
