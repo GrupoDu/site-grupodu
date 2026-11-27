@@ -10,7 +10,7 @@ interface RepresentativeCardProps {
 export const RepresentativeCard = ({
   representative,
 }: RepresentativeCardProps) => {
-  const { name, trading_name, cnpj_cpf, email, phone, city, uf, cep, number } =
+  const { company, tradingName, cnpjCpf, email, phone, city, uf, cep, number } =
     representative;
 
   return (
@@ -21,15 +21,15 @@ export const RepresentativeCard = ({
       </div>
       <div className={styles.cardBody}>
         <div className={styles.companyHeader}>
-          <span className={styles.companyName}>{name}</span>
-          {trading_name && (
-            <span className={styles.tradingName}>{trading_name}</span>
+          <span className={styles.companyName}>{company}</span>
+          {tradingName && (
+            <span className={styles.tradingName}>{tradingName}</span>
           )}
         </div>
         <div className={styles.detailsList}>
           <div className={styles.detailItem}>
             <LuFileText className={styles.icon} />
-            <span>{`CNPJ/CPF: ${cnpj_cpf}`}</span>
+            <span>{`CNPJ/CPF: ${cnpjCpf}`}</span>
           </div>
           {phone && (
             <div className={styles.detailItem}>
