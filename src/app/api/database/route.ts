@@ -1,68 +1,40 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
+import { supabaseClient } from "@/services/supabaseClient.service";
+import { errorResponse } from "@/utils/errorResponse";
+import { CACHE_CONTROL_DIRECTIVES } from "@/constants/cacheControlDirectives.constant";
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_API_KEY;
+interface IProductResponse {
+  products: IProduct[];
+  error?: PostgrestError | null;
+}
 
 export const GET = async (request: NextRequest) => {
-  const isMissingEnvValue = !supabaseUrl || !supabaseKey;
-  if (isMissingEnvValue) {
-    return NextResponse.json(
-      { error: "Supabase configuration is missing" },
-      { status: 500 }
-    );
-  }
-
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
   try {
-    const produtoEndpoint = getProductEndpoint(request);
+    const { products, error } = await getProducts();
 
-    if (!produtoEndpoint) return await productEndpointNotFound(supabase);
+    if (error) return errorResponse(error.message);
 
-    const { data, error } = await supabase
-      .from("products")
-      .select("*")
-      .order("product_uuid");
-
-    if (error) return errorResponse(error);
-
-    const produtoNormalizado = textNormalization(produtoEndpoint);
-    const dataFiltrada = data.filter((item) =>
-      textNormalization(item.tipo_produto).includes(produtoNormalizado)
-    );
-
-    return NextResponse.json(dataFiltrada, {
+    return NextResponse.json(products, {
       headers: {
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        "Cache-Control": CACHE_CONTROL_DIRECTIVES,
       },
     });
   } catch (err) {
     const error = err as Error;
-    console.error(error);
-    return errorResponse(error);
+    return errorResponse(error.message);
   }
 };
 
-function getProductEndpoint(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  return searchParams.get("produto") ?? "";
-}
+async function getProducts(): Promise<IProductResponse> {
+  const supabase = supabaseClient();
 
-async function productEndpointNotFound(supabase: SupabaseClient) {
   const { data, error } = await supabase.from("products").select("*");
 
-  if (error) return errorResponse(error);
-
-  return NextResponse.json(data, {
-    headers: {
-      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
-    },
-  });
-}
-
-function errorResponse(error: Error) {
-  return NextResponse.json({ error: error.message }, { status: 500 });
+  return {
+    products: data as IProduct[],
+    error,
+  };
 }
 
 function textNormalization(text: string) {

@@ -1,14 +1,15 @@
 .filtersContainer {
   padding: 0.8rem;
   border-radius: 0.6rem;
-  width: 40%;
+  max-width: 20rem;
+  min-width: 18rem;
   display: flex;
   flex-direction: column;
   gap: 10px;
   box-sizing: border-box;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 425px) {
   .filtersContainer {
     display: none;
   }

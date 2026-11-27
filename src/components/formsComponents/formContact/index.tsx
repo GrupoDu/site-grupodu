@@ -1,23 +1,47 @@
 "use client";
+
 import React, { ChangeEvent, FormEvent } from "react";
 import styles from "./styles.module.scss";
 import { Button } from "../../ui/buttons/button";
 import { LuSend } from "react-icons/lu";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { sendEmailContact } from "@/services/sendEmailContact";
-import { IContactInfos } from "../types";
+import { IGeneralContactInfos } from "@/components/formsComponents/types";
+import { IResponseAPI } from "@/services/types";
+
+const INIT_SET: IGeneralContactInfos = {
+  contato: "",
+  nome: "",
+  assunto: "",
+  email: "",
+  mensagem: "",
+  empresa: "",
+};
+
+/**
+ * Envia a mensagem para contato.
+ *
+ * @param {IGeneralContactInfos} contactInfos - Informações para contato.
+ */
+export async function sendEmailContact(
+  contactInfos: IGeneralContactInfos
+): Promise<IResponseAPI> {
+  const res = await fetch("/api/email", {
+    method: "POST",
+    body: JSON.stringify(contactInfos),
+  });
+
+  const data: IResponseAPI = await res.json();
+
+  if (!res.ok) throw new Error(data.message);
+
+  return data;
+}
 
 /** Componente que exibe o formulário de contato */
 export const FormContact = () => {
-  const [userInfos, setUserInfos] = useState<IContactInfos>({
-    email: "",
-    name: "",
-    phone: "",
-    company: "",
-    message: "",
-    subject: "",
-  });
+  const [contactInfos, setContactInfos] =
+    useState<IGeneralContactInfos>(INIT_SET);
   const [sending, setSending] = useState<boolean>(false);
 
   const handleEmailContactSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -25,11 +49,11 @@ export const FormContact = () => {
     setSending(true);
 
     try {
-      const emailContact = await sendEmailContact(userInfos);
+      const emailContact = await sendEmailContact(contactInfos);
       toast.success(emailContact.message);
     } catch (err) {
-      toast.error("Erro de conexão. Tente novamente mais tarde.");
-      console.log(err);
+      toast.error((err as Error).message);
+      console.error(err);
     } finally {
       setSending(false);
     }
@@ -45,11 +69,11 @@ export const FormContact = () => {
             type="text"
             name="nome-completo"
             placeholder="Seu nome completo"
-            value={userInfos.name}
+            value={contactInfos.nome}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUserInfos((prevUserInfos) => ({
-                ...prevUserInfos,
-                name: e.target.value,
+              setContactInfos((prevContactInfos) => ({
+                ...prevContactInfos,
+                nome: e.target.value,
               }))
             }
             required
@@ -61,10 +85,10 @@ export const FormContact = () => {
             type="email"
             name="email"
             placeholder="seu@email.com"
-            value={userInfos.email}
+            value={contactInfos.email}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUserInfos((prevUserInfos) => ({
-                ...prevUserInfos,
+              setContactInfos((prevContactInfos) => ({
+                ...prevContactInfos,
                 email: e.target.value,
               }))
             }
@@ -77,11 +101,11 @@ export const FormContact = () => {
             type="text"
             name="telefone"
             placeholder="(81) 99999-9999"
-            value={userInfos.phone}
+            value={contactInfos.contato}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUserInfos((prevUserInfos) => ({
-                ...prevUserInfos,
-                phone: e.target.value,
+              setContactInfos((prevContactInfos) => ({
+                ...prevContactInfos,
+                contato: e.target.value,
               }))
             }
             required
@@ -93,14 +117,13 @@ export const FormContact = () => {
             type="text"
             name="empresa"
             placeholder="Nome da sua empresa"
-            value={userInfos.company}
+            value={contactInfos.empresa}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUserInfos((prevUserInfos) => ({
-                ...prevUserInfos,
-                company: e.target.value,
+              setContactInfos((prevContactInfos) => ({
+                ...prevContactInfos,
+                empresa: e.target.value,
               }))
             }
-            required
           />
         </label>
         <label htmlFor="assunto" className={styles.assunto}>
@@ -109,11 +132,11 @@ export const FormContact = () => {
             type="text"
             name="assunto"
             placeholder="Sobre o que você gostaria de falar"
-            value={userInfos.subject}
+            value={contactInfos.assunto}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setUserInfos((prevUserInfos) => ({
-                ...prevUserInfos,
-                subject: e.target.value,
+              setContactInfos((prevContactInfos) => ({
+                ...prevContactInfos,
+                assunto: e.target.value,
               }))
             }
             required
@@ -124,11 +147,11 @@ export const FormContact = () => {
           <textarea
             name="mensage"
             placeholder="Digite sua mensagem aqui"
-            value={userInfos.message}
+            value={contactInfos.mensagem}
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              setUserInfos((prevUserInfos) => ({
-                ...prevUserInfos,
-                message: e.target.value,
+              setContactInfos((prevContactInfos) => ({
+                ...prevContactInfos,
+                mensagem: e.target.value,
               }))
             }
             required

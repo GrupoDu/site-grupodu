@@ -12,6 +12,7 @@ type cardTexts = {
   imagens: never[];
   href: string;
   buttonTxt: string;
+  type: string;
 };
 
 const ListaCatalogo = () => {
@@ -37,6 +38,7 @@ const ListaCatalogo = () => {
             bullets={card.bullets}
             buttonScheme="#4347FF"
             buttonTxt={card.buttonTxt}
+            productType={card.type}
           />
         </li>
       ))}

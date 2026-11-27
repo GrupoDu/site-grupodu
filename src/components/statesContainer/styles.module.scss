@@ -52,10 +52,16 @@
         }
       }
     }
+    
+    @media screen and (max-width: 768px) {
+      h1 {
+        font-size: 1.4rem;
+      } 
+    }
   }
 }
 
-@media screen and (min-width: 380px) and (max-width: 420px) {
+@media screen and (min-width: 320px) and (max-width: 600px) {
   .estadosContainer {
     flex-direction: column;
     padding: 1rem;

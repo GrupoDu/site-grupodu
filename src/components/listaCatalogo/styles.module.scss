@@ -15,8 +15,8 @@
   }
 }
 
-@media screen and (max-width: 420px) {
-  .container {
+@media screen and (max-width: 768px) {
+  .catalogListContainer {
     flex-direction: column;
   }
 }

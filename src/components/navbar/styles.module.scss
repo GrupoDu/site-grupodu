@@ -55,6 +55,10 @@
     justify-content: end;
     user-select: none;
     gap: 2em;
+    
+    a {
+      text-wrap: nowrap;
+    }
 
     .carrinhoIcon {
       position: relative;
@@ -128,14 +132,22 @@
   }
 }
 
-@media screen and (min-width: 380px) and (max-width: 420px) {
+@media screen and (max-width: 425px) {
+  .logoContainer {
+    display: none;
+  } 
+}
+
+@media screen and (min-width: 320px) and (max-width: 769px) {
   .ContainerHeaderNav {
     margin: 20px 1rem;
+    align-items: center;
+    justify-content: center;
 
     .logoContainer {
       flex: 1;
       gap: 0.2em;
-
+      
       .logoLink {
         display: none;
       }
@@ -153,6 +165,22 @@
     }
 
     .pagesLinks {
+      align-items: center;
+      justify-content: center;
+      gap: 1.4rem;
+      
+      a {
+        display: flex;
+        flex-direction: column;
+        font-size: 1.8rem;
+        align-items: center;
+        justify-content: center;
+        
+        span {
+          font-size: .6rem;
+        }
+      }
+      
       .pageLink {
         display: none;
       }
@@ -163,7 +191,7 @@
     }
 
     .menuIconContainer {
-      display: flex;
+      display: none;
       width: fit-content;
       height: fit-content;
 
