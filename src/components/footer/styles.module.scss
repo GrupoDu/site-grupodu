@@ -212,7 +212,6 @@
         input {
           outline: none;
           padding: 0.8em;
-          border: none;
           border-top-left-radius: 20px;
           border-bottom-left-radius: 20px;
           width: 20em;
@@ -227,7 +226,6 @@
           border-top-right-radius: 20px;
           border-bottom-right-radius: 20px;
           outline: none;
-          border: none;
           background: #273099;
           background: linear-gradient(
             90deg,
@@ -259,7 +257,7 @@
   }
 }
 
-@media screen and (min-width: 380px) and (max-width: 420px) {
+@media screen and (min-width: 320px) and (max-width: 768px) {
   .footerContainer {
     .upper {
       width: 100%;
