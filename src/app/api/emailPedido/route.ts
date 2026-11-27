@@ -1,31 +1,25 @@
 import { NextResponse } from "next/server";
 import Mailgun from "mailgun.js";
 import FormData from "form-data";
+import { EmailProductSchema } from "@/schemas/emailProduct.schema";
+import { buildContactMessage } from "@/utils/buildContactMessage";
+import { buildEmailTemplate } from "@/utils/buildEmailTemplate";
+import { IEmailProduct } from "@/@types/emailProduct.interface";
+import { errorResponse } from "@/utils/errorResponse";
 
 export const POST = async (req: Request) => {
-  const body = await req.json();
-  const { nome, email, telefone, empresa, quantidade, modelo } = body;
+  const payload: IEmailProduct = await req.json();
 
-  const emailTemplate = `
-        <h1>Informações do contato</h1>
-        <h3>Nome completo</h3>
-        <p>${nome}</p>
-        <hr />
-        <h3>Email</h3>
-        <p>${email}</p>
-        <hr />
-        <h3>modelo do produto</h3>
-        <p>${modelo}</p>
-        <hr />
-        <h3>Quantidade</h3>
-        <p>${quantidade}</p>
-        <hr />
-        <h3>Empresa</h3>
-        <p>${empresa ? empresa : "Empresa não informada"}</p>
-        <hr />
-        <br />
-        <h4>Contato enviado pelo site de produto.</h4>
-        `;
+  const validatePayload = EmailProductSchema.safeParse(payload);
+
+  if (!validatePayload.success) {
+    return errorResponse(
+      "Por favor, Verifique se todos os campos foram preenchidos corretamente",
+      400
+    );
+  }
+
+  const emailTemplate = buildEmailTemplate(payload);
 
   const mailgun = new Mailgun(FormData);
   const mg = mailgun.client({
@@ -33,25 +27,13 @@ export const POST = async (req: Request) => {
     key: process.env.API_KEY || "API_KEY",
   });
   try {
-    if (!nome || !email || !telefone || !modelo || !quantidade) {
-      return NextResponse.json({
-        error: "Por favor, preencha todos os campos",
-        status: 400,
-      });
-    }
-
-    const data = await mg.messages.create("grupodu.com.br", {
-      from: "Grupodu Contato<email@grupodu.com.br>",
-      to: ["Dom Metal<dommetalind@gmail.com>"],
-      subject: "Email enviado pelo site",
-      text: `Solicitação de contato`,
-      html: emailTemplate,
-    });
-
-    console.log(data);
+    await mg.messages.create(
+      "grupodu.com.br",
+      buildContactMessage(emailTemplate, "Pedido de produto")
+    );
 
     return NextResponse.json({ message: "Enviado com sucesso", status: 200 });
   } catch (err) {
-    console.log(err);
+    return errorResponse((err as Error).message);
   }
 };
