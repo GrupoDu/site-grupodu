@@ -14,18 +14,11 @@ declare module "@/app/globals.scss" {
 }
 
 declare global {
-  interface IUserInfos {
-    email: string;
-    name: string;
-    phone: string;
-    company: string;
-  }
-
   interface IProduct {
-    product_uuid: string;
+    uuid: string;
     name: string;
     description: string;
-    product_type: string;
+    type: string;
     image: string;
     features: string[];
   }
