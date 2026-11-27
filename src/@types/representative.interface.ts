@@ -17,13 +17,13 @@ export interface IRepresentative {
 // CORPO DO EMAIL
 export interface IRegisterRepresentative {
   empresa: string;
-  nome_fantasia?: string;
-  cnpj_cnpf?: string;
-  email: string;
-  contato: string;
+  nome_fantasia?: string | null;
+  cnpj_cpf: string;
+  email?: string | null;
+  contato?: string | null;
   estado: string;
   uf: string;
   cep: string;
-  numero: number;
+  numero?: number;
   cidade: string;
 }
